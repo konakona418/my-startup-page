@@ -1,10 +1,25 @@
+import aiohttp
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
 from starlette.staticfiles import StaticFiles
 
+async def test_connection():
+    sess = aiohttp.ClientSession()
+    try:
+        await sess.get("https://www.bing.com", timeout=10)
+        print("Network available.")
+        await sess.close()
+        return True
+    except:
+        print("Network unavailable.")
+        await sess.close()
+        return False
 
 async def init():
+    if not await test_connection():
+        return
+
     import service
     if not service.data_fetched:
         await service.init_all_tables()
@@ -50,4 +65,4 @@ async def get_notifications():
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, port=8000)
+    uvicorn.run(app, port=11451)
