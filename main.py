@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import FileResponse
+from starlette.staticfiles import StaticFiles
+
 
 async def init():
     import service
@@ -11,6 +14,7 @@ async def close():
     await service.close_service()
 
 app = FastAPI(on_startup=[init], on_shutdown=[close])
+app.mount("/assets", StaticFiles(directory="static/dist/assets"), name="assets")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -20,8 +24,8 @@ app.add_middleware(
 )
 
 @app.get("/")
-async def get_index():
-    return {"message": "Hello World"}
+async def root():
+    return FileResponse("static/dist/index.html")
 
 
 @app.get("/api/notifications/count")
