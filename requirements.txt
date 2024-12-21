@@ -1,0 +1,7 @@
+pydantic==2.10.4
+aiohttp==3.11.11
+yarl==1.18.3
+pycryptodome==3.21.0
+uvicorn==0.34.0
+fastapi==0.115.6
+starlette==0.41.3
